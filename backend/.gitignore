@@ -19,11 +19,6 @@ env/
 uploads/*
 !uploads/.gitkeep
 
-# ML Models (too large for git)
-ml_models/*.h5
-ml_models/*.pb
-ml_models/*.tflite
-
 # IDE
 .vscode/
 .idea/
