@@ -12,7 +12,7 @@ Flask-Bcrypt==1.0.1
 Flask-JWT-Extended==4.7.1
 
 # ML & Image Processing
-tensorflow==2.16.1
+tensorflow-cpu==2.16.1
 Pillow==11.1.0
 numpy==1.26.4
 
