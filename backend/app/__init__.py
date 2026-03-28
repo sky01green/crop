@@ -83,20 +83,6 @@ def create_app(config_name=None):
         # Import all models so SQLAlchemy knows about them
         from app.models import user, prediction, report  # noqa: F401
         db.create_all()
-        
-        # Load ML model if available
-        try:
-            from app.ml.model_loader import load_model
-            model_path = app.config['ML_MODEL_PATH']
-            if os.path.exists(model_path):
-                app.config['ML_MODEL'] = load_model(model_path)
-                print(f"OK: ML model loaded from {model_path}")
-            else:
-                app.config['ML_MODEL'] = None
-                print(f"WARNING: ML model not found at {model_path}. Running in demo mode.")
-        except Exception as e:
-            app.config['ML_MODEL'] = None
-            print(f"WARNING: Could not load ML model: {e}. Running in demo mode.")
     
     # JWT error handlers
     @jwt.expired_token_loader

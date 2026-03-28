@@ -61,7 +61,12 @@ def predict():
     
     try:
         # ---- Run AI prediction ----
-        model = current_app.config.get('ML_MODEL')
+        from app.ml.model_loader import get_model
+        model = get_model()
+        
+        if model is None:
+            return jsonify({'message': 'ML model service is currently unavailable. Please try again later.'}), 503
+            
         result = predict_disease(model, upload_path)
         
         # ---- Save prediction to database ----

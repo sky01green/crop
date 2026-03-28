@@ -46,6 +46,12 @@ CLASS_NAMES = [
 ]
 
 
+import os
+import logging
+
+# Singleton for the loaded model
+_model = None
+
 def load_model(model_path):
     """
     Load a trained Keras model from disk.
@@ -57,9 +63,36 @@ def load_model(model_path):
         Loaded Keras model ready for inference
     """
     import tensorflow as tf
-    model = tf.keras.models.load_model(model_path)
-    # Warm up the model with a dummy prediction
     import numpy as np
-    dummy = np.zeros((1, 128, 128, 3), dtype=np.float32)
-    model.predict(dummy, verbose=0)
-    return model
+    
+    logging.info(f"Loading ML model from {model_path}...")
+    try:
+        model = tf.keras.models.load_model(model_path)
+        # Warm up the model with a dummy prediction
+        dummy = np.zeros((1, 128, 128, 3), dtype=np.float32)
+        model.predict(dummy, verbose=0)
+        logging.info("ML model loaded and warmed up successfully.")
+        return model
+    except Exception as e:
+        logging.error(f"Failed to load ML model: {e}")
+        return None
+
+def get_model():
+    """
+    Retrieve the ML model, loading it lazily if not already loaded.
+    Uses the path from config.
+    """
+    global _model
+    if _model is not None:
+        return _model
+    
+    from flask import current_app
+    model_path = current_app.config.get('ML_MODEL_PATH')
+    
+    if os.path.exists(model_path):
+        _model = load_model(model_path)
+    else:
+        logging.warning(f"ML model file not found at {model_path}")
+        _model = None
+        
+    return _model
