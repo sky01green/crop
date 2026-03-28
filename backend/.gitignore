@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+venv/
+env/
+.venv/
+
+# Environment
+.env
+
+# Database
+*.db
+*.sqlite3
+
+# Uploads (keep folder, ignore files)
+uploads/*
+!uploads/.gitkeep
+
+# ML Models (too large for git)
+ml_models/*.h5
+ml_models/*.pb
+ml_models/*.tflite
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
