@@ -60,6 +60,17 @@ def create_app(config_name=None):
     app.register_blueprint(reports_bp, url_prefix='/api/reports')
     app.register_blueprint(users_bp, url_prefix='/api/users')
     
+    # Health check endpoint for Render
+    @app.route('/api/health')
+    def health_check():
+        try:
+            # Check database connection
+            from sqlalchemy import text
+            db.session.execute(text('SELECT 1'))
+            return {'status': 'healthy', 'database': 'connected'}, 200
+        except Exception as e:
+            return {'status': 'unhealthy', 'error': str(e)}, 500
+    
     # Register static file serving for uploads
     from flask import send_from_directory
     
