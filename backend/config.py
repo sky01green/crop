@@ -36,10 +36,10 @@ def _build_db_url():
     try:
         from urllib.parse import urlparse, quote_plus
 
-        parsed = urlparse(raw_url)
-        username = parsed.username or "postgres"
-        password = parsed.password or ""
-        host = parsed.hostname or ""
+        parsed = urlparse(raw_url.strip())
+        username = (parsed.username or "postgres").strip()
+        password = (parsed.password or "").strip()
+        host = (parsed.hostname or "").strip()
         port = parsed.port or 5432
         dbname = (parsed.path or "/postgres").lstrip("/") or "postgres"
 
