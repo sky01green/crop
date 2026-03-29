@@ -78,11 +78,18 @@ def create_app(config_name=None):
     def serve_upload(filename):
         return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
     
-    # Create database tables (for development without migrations)
-    with app.app_context():
-        # Import all models so SQLAlchemy knows about them
-        from app.models import user, prediction, report  # noqa: F401
-        db.create_all()
+    # Create database tables if they don't exist
+    # This is useful for first-time setup on Render/Supabase
+    try:
+        with app.app_context():
+            print("--- INITIALIZING DATABASE ---", flush=True)
+            # Import all models so SQLAlchemy knows about them
+            from app.models import User, Prediction, HealthReport  # noqa: F401
+            db.create_all()
+            print("--- DATABASE READY ---", flush=True)
+    except Exception as e:
+        print(f"--- WARNING: Database initialization failed: {e} ---", flush=True)
+        print("Continuing startup anyway; check DATABASE_URL if issues persist.", flush=True)
     
     # JWT error handlers
     @jwt.expired_token_loader

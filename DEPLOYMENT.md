@@ -21,9 +21,12 @@ Render is perfect for Flask applications.
 ### 2. Configure Service Settings
 -   **Name**: `crop-disease-backend`
 -   **Runtime**: `Python 3`
--   **Build Command**: `pip install -r backend/requirements.txt`
+-   **Root Directory**: `backend` (CRITICAL: Set this if your backend is in this subfolder!)
+-   **Build Command**: `pip install -r requirements.txt` (Note: if Root Directory is `backend`, don't include `backend/` prefix here)
 -   **Start Command**: `gunicorn --bind 0.0.0.0:$PORT run:app`
--   *Note: If your backend is in a subfolder, you may need to set the `Root Directory` to `backend` in Render settings.*
+-   **Note**: If you **don't** set Root Directory to `backend`, your commands must be:
+    - Build: `pip install -r backend/requirements.txt`
+    - Start: `gunicorn --bind 0.0.0.0:$PORT --chdir backend run:app`
 
 ### 3. Set Environment Variables
 Go to the **Environment** tab on Render and add the Following:
