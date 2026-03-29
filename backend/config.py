@@ -50,10 +50,12 @@ def _build_db_url():
             parts = host.split(".")
             if len(parts) >= 3:
                 project_ref = parts[1]
-            # Switch to pooler hostname (IPv4)
-            region = os.environ.get("SUPABASE_REGION", "ap-southeast-1")
-            host = f"aws-0-{region}.pooler.supabase.com"
-            port = 6543
+                pooler_host = os.environ.get(
+                    "SUPABASE_POOLER_HOST",
+                    f"aws-1-ap-southeast-1.pooler.supabase.com"
+                )
+                host = pooler_host
+                port = 6543
 
         # Case 2: Already on pooler hostname
         elif "pooler.supabase.com" in host:
