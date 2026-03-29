@@ -14,6 +14,7 @@ export async function uploadAndPredict(file, onUploadProgress) {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+    timeout: 180000, // 3 minutes — TensorFlow inference + Render cold start can be slow
     onUploadProgress,
   });
   return response.data;
