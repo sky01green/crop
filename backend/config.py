@@ -17,8 +17,20 @@ class Config:
     
     # Database - defaults to local SQLite for easy setup, use PostgreSQL in production
     _db_url = os.environ.get('DATABASE_URL')
-    if _db_url and _db_url.startswith("postgres://"):
-        _db_url = _db_url.replace("postgres://", "postgresql://", 1)
+    if _db_url:
+        # Standardize prefix for SQLAlchemy 2.0+
+        if _db_url.startswith("postgres://"):
+            _db_url = _db_url.replace("postgres://", "postgresql://", 1)
+        
+        # If the URL is for Supabase, ensure it uses the connection pooler port (6543)
+        # to avoid "Network unreachable" errors on port 5432 in some production environments
+        if "supabase.co" in _db_url:
+            if ":5432" in _db_url:
+                _db_url = _db_url.replace(":5432", ":6543")
+            
+            # Ensure SSL mode is required for Supabase
+            if "sslmode=" not in _db_url:
+                _db_url += "?sslmode=require" if "?" not in _db_url else "&sslmode=require"
 
     SQLALCHEMY_DATABASE_URI = _db_url or f'sqlite:///{os.path.join(BASE_DIR, "app.db")}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
