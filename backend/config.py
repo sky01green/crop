@@ -60,6 +60,10 @@ def _build_db_url():
         # Case 2: Already on pooler hostname
         elif "pooler.supabase.com" in host:
             port = 6543
+            # Override host if SUPABASE_POOLER_HOST is set (fixes aws-0 vs aws-1 issues)
+            override_host = os.environ.get("SUPABASE_POOLER_HOST")
+            if override_host:
+                host = override_host
             # Extract project_ref from username if already set
             if "." in username:
                 project_ref = username.split(".", 1)[1]
