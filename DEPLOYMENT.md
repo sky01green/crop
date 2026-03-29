@@ -30,7 +30,8 @@ Render is perfect for Flask applications.
 
 ### 3. Set Environment Variables
 Go to the **Environment** tab on Render and add the Following:
--   `DATABASE_URL`: (Paste your Supabase URI)
+-   `DATABASE_URL`: `postgresql://...:6543/postgres?sslmode=require` 
+    *(CRITICAL: Use port 6543 for Supabase in production to avoid "Network unreachable" errors).*
 -   `SECRET_KEY`: (A long random string)
 -   `JWT_SECRET_KEY`: (Another random string)
 -   `FLASK_ENV`: `production`

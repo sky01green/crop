@@ -47,7 +47,15 @@ def create_app(config_name=None):
     bcrypt.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    
+    # Configure CORS - allow specific origins in production
+    allowed_origins = [
+        "https://crop-henna.vercel.app",
+        "https://crop-hvxd1txq2-akashkotal450-7054s-projects.vercel.app",
+        "http://localhost:3000",
+        "http://localhost:5173"
+    ]
+    CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
     
     # Register route blueprints
     from app.routes.auth import auth_bp
