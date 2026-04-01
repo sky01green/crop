@@ -15,6 +15,7 @@ function LoginForm() {
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [slowLoadingMsg, setSlowLoadingMsg] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,7 +43,17 @@ function LoginForm() {
     }
 
     setLoading(true);
+    setSlowLoadingMsg(false);
+
+    // If it takes more than 15s, show a warning that server is waking up
+    const slowTimer = setTimeout(() => {
+      setSlowLoadingMsg(true);
+    }, 15000);
+
     const result = await login(formData.email, formData.password);
+    
+    clearTimeout(slowTimer);
+    setSlowLoadingMsg(false);
     setLoading(false);
 
     if (result.success) {
@@ -60,6 +71,12 @@ function LoginForm() {
       {apiError && (
         <div className="alert alert-error" role="alert">
           {apiError}
+        </div>
+      )}
+
+      {slowLoadingMsg && (
+        <div className="alert alert-warning" role="alert" style={{ backgroundColor: '#fff3cd', color: '#856404', padding: '1rem', borderRadius: '0.375rem', marginBottom: '1rem', border: '1px solid #ffeeba', animation: 'pulse 2s infinite' }}>
+          <strong>Server is waking up.</strong> This happens on the free tier after inactivity and can take up to 2 minutes. Please wait...
         </div>
       )}
 
